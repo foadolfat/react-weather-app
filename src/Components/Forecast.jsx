@@ -1,41 +1,34 @@
 import * as React from "react";
-import {forecast} from '../Services/forecast.js';
-import {geolocation} from '../Services/geolocation.js';
-import { useLocation, LOCATION_DISPATCH_ACTION } from "../Contexts/LocationContext";
-import Weatherinfo from './Weatherinfo.jsx';
+import {Context} from "../Contexts/WeatherContext";
+import Days from './Days.jsx';
 
-const Currentweather = () => {
-    const [current, setCurrent] = React.useState(null);
-    const [ location, locationDispatcher ] = useLocation();
+const Forecast = () => {
+    const {fo} = React.useContext(Context);
+    const [forecastState] = fo;
+    const [ days, setDays] = React.useState([]);
     React.useEffect(() => {
-        geolocation(location.location).then(data => {
-            locationDispatcher([
-                {
-                    action: LOCATION_DISPATCH_ACTION.SET_LAT,
-                    payload: data.data[0].latitude
-                },
-                {
-                    action: LOCATION_DISPATCH_ACTION.SET_LON,
-                    payload: data.data[0].longitude
-                }
-            ]);
-            forecast(data).then(data => {
-                setCurrent(data);
-                
-            }).then( () => {
-                console.log("forecast is ",current)
-            })
+        var lastDate = "";
+        var result = [];
+        forecastState.list.map(forecast => {
+            if(forecast.dt_txt.substring(0,10) !== lastDate){
+                lastDate = forecast.dt_txt.substring(0,10);
+                result.push([forecast]);
+            } else {
+                result[result.length-1].push(forecast);
+            }
+            return 0;
         })
-    }, [location.location]);
+        setDays(result);
+    }, [forecastState]);
 
     return(
-        <div>
-            {current && (
+        <div >
+            {days && (
                 <div>
                     {
-                        current.list.map( (forecast, index) => {
+                        days.map( (day, index) => {
                             return(
-                                <Weatherinfo forecast={forecast} key={index}/>
+                                <Days day={day} key={index}/>
                             )
                         })
                     }
@@ -45,4 +38,4 @@ const Currentweather = () => {
 
     )
 }
-export default Currentweather;
+export default Forecast;

@@ -1,22 +1,23 @@
 import * as React from "react";
-import {currentweather} from '../Services/currentweather.js';
-import {geolocation} from '../Services/geolocation.js';
-import { useLocation, LOCATION_DISPATCH_ACTION } from "../Contexts/LocationContext";
+import {Context} from "../Contexts/WeatherContext";
 
-const Navbar = () => {
-    const [ location, locationDispatcher ] = useLocation();
+const Navbar = ({mode, setMode}) => {
+    const {loc} = React.useContext(Context);
+    const [location, setLocation] = loc;
     return(
         <div>
-            <input type="text" id="city" placeholder="City" />
+            <input type="text" id="city" placeholder={location}/>
             <button onClick={() => {
                 const city = document.getElementById('city').value;
-                locationDispatcher([
-					{
-						action: LOCATION_DISPATCH_ACTION.SET_LOCATION,
-						payload: city
-					}
-				]);
+                setLocation(city)
             }}>Get Weather</button>
+            <button onClick={() => {
+                if(mode === 'current') {
+                    setMode('forecast');
+                } else {
+                    setMode('current');
+                }
+            }}>{mode === 'current' ? 'Forecast' : 'Current'}</button>
             
         </div>
 

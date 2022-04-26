@@ -1,20 +1,24 @@
+import React from "react"
 import Navbar from '../Components/Navbar.jsx';
 import Currentweather from '../Components/Currentweather.jsx';
 import Forecast from '../Components/Forecast.jsx';
 
 const Weatherpage = () => {
+    const [ mode, setMode ] = React.useState('current');
+
+        
+
     return(
         <div>
             <div>
-                <Navbar />
+                <Navbar setMode={setMode} mode={mode}/>
             </div>
             <div>
-                <Currentweather />
+                {mode === 'current' ? <Currentweather /> : <Forecast />}
             </div>
-            <div>
-                <Forecast />
-            </div>
+
         </div>
+
     )
 }
 

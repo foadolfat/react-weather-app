@@ -1,13 +1,13 @@
 import Weatherpage from './Pages/Weatherpage';
-import LocationContext from './Contexts/LocationContext';
+import WeatherContext from './Contexts/WeatherContext';
 
 function App() {
   return (
-    <LocationContext>
+    <WeatherContext>
       <div className="App">
         <Weatherpage />
       </div>
-    </LocationContext>
+    </WeatherContext>
   );
 }
 
